@@ -1,0 +1,10 @@
+Things to do in this project:
+
+-> Setup PreCommit Hook to catch errors and warning lint issues
+-> CICD Pipeline
+  -> github Actions
+  -> Check if we can setup with Screwdriver
+  -> BitBucket or any other third party Pipeline
+-> Test Setup
+-> e2e Setup with Cypress
+  - Check if any other frameworks like Cypress that are popular in industry
