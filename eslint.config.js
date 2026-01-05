@@ -16,13 +16,15 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        ...globals.browser // browser global variables like `window` and `document`
+        ...globals.browser, // browser global variables like `window` and `document`
+        ...globals.jest, // Jest global variables like `describe` and `it`
+        vi: 'readonly', // Vitest's mock/spy utility
       },
       parserOptions: {
         ecmaFeatures: {
-          jsx: true // enable JSX parsing
-        }
-      }
+          jsx: true, // enable JSX parsing
+        },
+      },
     },
 
     plugins: {
@@ -44,20 +46,20 @@ export default [
       // General rules
       'no-unused-vars': 'warn',
       'no-console': 'warn',
-      'semi': ['warn', 'always'],
-      'quotes': ['warn', 'single']
+      semi: ['warn', 'always'],
+      quotes: ['warn', 'single'],
     },
 
     settings: {
       react: {
-        version: 'detect' // automatically detect the react version from package.json
-      }
-    }
+        version: 'detect', // automatically detect the react version from package.json
+      },
+    },
   },
 
   // ignore patterns
   {
-    ignores: ['dist/**', 'node_modules/**']
+    ignores: ['dist/**', 'node_modules/**'],
   },
 
   // Prettier config - MUST BE LAST!

@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out your code
+      - uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js (use same version as .nvmrc)
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # Step 3: Install dependencies
+      - run: npm ci
+
+      # Step 4: Run linting
+      - run: npm run lint
+
+      # Step 5: Check formatting
+      - run: npm run format:check
+
+      # Step 6: Run tests
+      - run: npm run test:run
+
+      # Step 7: Build the project
+      - run: npm run build
