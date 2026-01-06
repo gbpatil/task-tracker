@@ -1,7 +1,7 @@
-import './App.css';
+import '@/App.css';
 
 function App() {
-  const appName = '📋 Task Tracker';
+  const appName = `📋 ${import.meta.env.VITE_APP_NAME}`;
   const subtitle = 'Welcome to your task management app.';
 
   return (

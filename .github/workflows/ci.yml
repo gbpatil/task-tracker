@@ -34,3 +34,6 @@ jobs:
 
       # Step 7: Build the project
       - run: npm run build
+        env:
+          VITE_APP_NAME: ${{ secrets.VITE_APP_NAME }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
