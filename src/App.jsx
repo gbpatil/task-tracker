@@ -1,7 +1,8 @@
 import '@/App.css';
+import { config } from '@/config';
 
 function App() {
-  const appName = `📋 ${import.meta.env.VITE_APP_NAME}`;
+  const appName = `📋 ${config.appName}`;
   const subtitle = 'Welcome to your task management app.';
 
   return (
