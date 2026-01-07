@@ -111,6 +111,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          GITHUB_PAGES: true
 
       - name: Upload artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
