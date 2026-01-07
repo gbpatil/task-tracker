@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export default defineConfig({
-  base: '/task-tracker/',
+  base: process.env.GITHUB_ACTIONS ? '/task-tracker/' : '/',
   plugins: [react()],
   resolve: {
     alias: {

@@ -4,64 +4,112 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
+// Shared configurations
+const sharedLanguageOptions = {
+  ecmaVersion: 'latest',
+  sourceType: 'module',
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+  },
+};
+
+const sharedPlugins = {
+  react: reactPlugin,
+  'react-hooks': reactHooksPlugin,
+};
+
+const sharedReactRules = {
+  'react/react-in-jsx-scope': 'off',
+  'react/prop-types': 'off',
+  'react/jsx-uses-react': 'error',
+  'react/jsx-uses-vars': 'error',
+  'react-hooks/rules-of-hooks': 'error',
+  'react-hooks/exhaustive-deps': 'warn',
+};
+
+const sharedReactSettings = {
+  react: {
+    version: 'detect',
+  },
+};
+
 export default [
-  // Base javascript recommended rules
+  // 1. Base javascript recommended rules
   js.configs.recommended,
 
-  // config for our source files
+  // 2. Source files (React/Browser)
   {
     files: ['src/**/*.{js,jsx}'],
+    ignores: ['src/**/*.test.{js,jsx}', 'src/**/*.spec.{js,jsx}'],
 
     languageOptions: {
-      ecmaVersion: 'latest',
-      sourceType: 'module',
+      ...sharedLanguageOptions,
       globals: {
-        ...globals.browser, // browser global variables like `window` and `document`
-        ...globals.jest, // Jest global variables like `describe` and `it`
-        vi: 'readonly', // Vitest's mock/spy utility
-      },
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true, // enable JSX parsing
-        },
+        ...globals.browser,
       },
     },
 
-    plugins: {
-      react: reactPlugin,
-      'react-hooks': reactHooksPlugin,
-    },
+    plugins: sharedPlugins,
 
     rules: {
-      // react plugin rules
-      'react/react-in-jsx-scope': 'off',
-      'react/prop-types': 'off',
-      'react/jsx-uses-react': 'error',
-      'react/jsx-uses-vars': 'error',
-
-      // react hooks plugin rules
-      'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
-      'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
-
-      // General rules
+      ...sharedReactRules,
       'no-unused-vars': 'warn',
       'no-console': 'warn',
       semi: ['warn', 'always'],
       quotes: ['warn', 'single'],
     },
 
-    settings: {
-      react: {
-        version: 'detect', // automatically detect the react version from package.json
+    settings: sharedReactSettings,
+  },
+
+  // 3. Test files (Vitest/Jest)
+  {
+    files: ['src/**/*.test.{js,jsx}', 'src/**/*.spec.{js,jsx}'],
+
+    languageOptions: {
+      ...sharedLanguageOptions,
+      globals: {
+        ...globals.browser,
+        ...globals.jest,
+        vi: 'readonly',
       },
+    },
+
+    plugins: sharedPlugins,
+
+    rules: {
+      ...sharedReactRules,
+      'no-unused-vars': 'warn',
+      'no-console': 'off',
+    },
+
+    settings: sharedReactSettings,
+  },
+
+  // 4. Node.js config files
+  {
+    files: ['*.config.js'],
+
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.node, // provides access to Node.js global variables in config files
+      },
+    },
+
+    rules: {
+      'no-console': 'off',
     },
   },
 
-  // ignore patterns
+  // 5. Ignore patterns
   {
     ignores: ['dist/**', 'node_modules/**'],
   },
 
-  // Prettier config - MUST BE LAST!
+  // 6. Prettier config - MUST BE LAST!
   eslintConfigPrettier,
 ];
