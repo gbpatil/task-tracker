@@ -5,6 +5,12 @@ Things to do in this project:
   -> github Actions
   -> Check if we can setup with Screwdriver
   -> BitBucket or any other third party Pipeline
+  -> restrict commiting on main/master
+  -> force people to create branch or fork whatever is industry practice
+  -> when PR is against main/master -> Run CI pipeline - lint/test/build - publish to stage
+  -> on Merge CI runs on main/master and publishes
+  -> restriction on merge or publish on weekends
 -> Test Setup
 -> e2e Setup with Cypress
   - Check if any other frameworks like Cypress that are popular in industry
+->

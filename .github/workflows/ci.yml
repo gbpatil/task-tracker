@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -6,34 +6,53 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
+jobs:
+  # Job 1: Lint, Test, Build
+  build:
+    runs-on: ubuntu-latest
     steps:
-      # Step 1: Check out your code
       - uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js (use same version as .nvmrc)
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
-      # Step 3: Install dependencies
       - run: npm ci
 
-      # Step 4: Run linting
-      - run: npm run lint
+      - name: Lint
+        run: npm run lint
 
-      # Step 5: Check formatting
-      - run: npm run format:check
+      - name: Format Check
+        run: npm run format:check
 
-      # Step 6: Run tests
-      - run: npm run test:run
+      - name: Test
+        run: npm run test:run
 
-      # Step 7: Build the project
-      - run: npm run build
-        env:
-          VITE_APP_NAME: ${{ secrets.VITE_APP_NAME }}
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      - name: Build
+        run: npm run build
+
+      # Only upload artifact for deployment on push to main (not PRs)
+      - name: Upload artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  # Job 2: Deploy (only on push to main, not on PRs)
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
