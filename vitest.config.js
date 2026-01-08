@@ -12,10 +12,10 @@ export default mergeConfig(
       globals: true,
 
       // Setup files to run before each test file
-      setupFiles: ['./src/test/setup.js'],
+      setupFiles: ['./src/test/setup.ts'],
 
       // Where to look for test files
-      include: ['src/**/*.{test,spec}.{js,jsx}'],
+      include: ['src/**/*.{test,spec}.{ts,tsx}'],
 
       // Coverage configuration
       coverage: {

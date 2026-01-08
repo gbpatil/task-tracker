@@ -52,6 +52,26 @@ jobs:
       - name: Run ESLint
         run: npm run lint
 
+  # Job 2.1: Type Check
+  type-check:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Restore node_modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json') }}
+
+      - name: Type Check
+        run: npm run type-check
+
   # Job 3: Format Check
   format:
     needs: install
@@ -94,7 +114,7 @@ jobs:
 
   # Job 5: Build
   build:
-    needs: [lint, format, test]
+    needs: [lint, format, test, type-check]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

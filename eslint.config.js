@@ -2,6 +2,8 @@ import js from '@eslint/js';
 import globals from 'globals';
 import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 import eslintConfigPrettier from 'eslint-config-prettier';
 
 // Shared configurations
@@ -39,37 +41,42 @@ export default [
   // 1. Base javascript recommended rules
   js.configs.recommended,
 
-  // 2. Source files (React/Browser)
+  // 2. Source files (TypeScript + React)
   {
-    files: ['src/**/*.{js,jsx}'],
-    ignores: ['src/**/*.test.{js,jsx}', 'src/**/*.spec.{js,jsx}'],
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/**/*.test.{ts,tsx}', 'src/**/*.spec.{ts,tsx}'],
 
     languageOptions: {
       ...sharedLanguageOptions,
+      parser: tsParser,
       globals: {
         ...globals.browser,
       },
     },
 
-    plugins: sharedPlugins,
+    plugins: {
+      ...sharedPlugins,
+      '@typescript-eslint': tseslint,
+    },
 
     rules: {
       ...sharedReactRules,
-      'no-unused-vars': 'warn',
+      // Disable JS rules that TypeScript handles
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
       'no-console': 'warn',
-      semi: ['warn', 'always'],
-      quotes: ['warn', 'single'],
     },
 
     settings: sharedReactSettings,
   },
 
-  // 3. Test files (Vitest/Jest)
+  // 3. Test files (TypeScript + Vitest)
   {
-    files: ['src/**/*.test.{js,jsx}', 'src/**/*.spec.{js,jsx}'],
+    files: ['src/**/*.test.{ts,tsx}', 'src/**/*.spec.{ts,tsx}'],
 
     languageOptions: {
       ...sharedLanguageOptions,
+      parser: tsParser,
       globals: {
         ...globals.browser,
         ...globals.jest,
@@ -77,11 +84,15 @@ export default [
       },
     },
 
-    plugins: sharedPlugins,
+    plugins: {
+      ...sharedPlugins,
+      '@typescript-eslint': tseslint,
+    },
 
     rules: {
       ...sharedReactRules,
-      'no-unused-vars': 'warn',
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': 'warn',
       'no-console': 'off',
     },
 
@@ -96,7 +107,7 @@ export default [
       ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
-        ...globals.node, // provides access to Node.js global variables in config files
+        ...globals.node,
       },
     },
 
