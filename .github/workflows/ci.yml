@@ -136,7 +136,7 @@ jobs:
   # Job 7: Deploy to Vercel
   deploy-vercel:
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_VERCEL == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -175,7 +175,7 @@ jobs:
   # Job 8: Deploy to Netlify
   deploy-netlify:
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_NETLIFY == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
